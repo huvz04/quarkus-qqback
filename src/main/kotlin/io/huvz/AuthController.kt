@@ -1,22 +1,29 @@
 package io.huvz
 
-import io.huvz.domain.BrowserFactory
-import io.huvz.domain.DeMessage
-import io.huvz.domain.GitHttpClient
-import io.huvz.domain.GiteeApi
+import freemarker.template.Template
+import io.huvz.domain.*
+import io.huvz.domain.vo.GiteeUsers
+import io.ktor.client.call.*
+import io.quarkiverse.freemarker.TemplatePath
+import io.vertx.core.http.impl.HttpClientConnection.log
 import jakarta.inject.Inject
 import jakarta.ws.rs.*
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
 import org.jboss.resteasy.reactive.RestQuery
+import java.io.StringWriter
 import java.util.*
+
 
 @Path("/v2api/bot")
 class AuthController {
     @Inject
     lateinit var browserService : BrowserFactory;
+
+    @Inject
+    @TemplatePath("giteeUser.ftl")
+    lateinit var giteeUserHtml: Template
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -38,14 +45,30 @@ class AuthController {
         return Response.ok(imageBytes).build();
     }
 
-    @Path("/searchgitee")
+    @Path("/searchGitee")
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    fun searchgitee(@RestQuery name:String): Response? {
+    //@Produces(MediaType.APPLICATION_JSON)
+    @Produces("image/jpeg")
+    suspend fun searchgitee(@RestQuery name:String): Response? {
+
         val client = GitHttpClient();
-        val body = client.get(GiteeApi.SEARCH_USER.url)
-        val jsonresult = Json.decodeFromString<JsonObject>(body);
-        return Response.ok(jsonresult).build();
+        val httpre = client.get(GiteeApi.SEARCH_USER.url,name) ?: return Response.status(500).entity("服务器内部错误").build()
+        if(httpre.status.value!=200) return Response.status(403).entity("远程服务器拒绝了操作").build();
+        val body :String?= httpre.call.body()
+        val json  = Json(){ignoreUnknownKeys=true}
+        var list: Array<GiteeUsers>? = body?.let { json.decodeFromString<Array<GiteeUsers>>(it) }
+        if (list != null) {
+            list = list.take(5).toTypedArray()
+        }
+        val stringWriter = StringWriter()
+        val map = HashMap<String,Array<GiteeUsers>>()
+        list?.let { map.put("users", it) };
+        giteeUserHtml.process(map, stringWriter)
+        val result = stringWriter.toString()
+
+        val imageBytes: ByteArray = Base64.getDecoder().decode(browserService.htmlToImg(result))
+        return Response.ok(imageBytes).build();
     }
+
 
 }

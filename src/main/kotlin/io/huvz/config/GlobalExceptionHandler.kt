@@ -8,6 +8,6 @@ class GlobalExceptionHandler {
     @ServerExceptionMapper
     fun globalExceptionHandler(e: Exception?): Response {
         log.error("global exception ", e)
-        return Response.status(404).entity("not found").build()
+        return Response.status(500).entity("服务器内部错误${e?.message}").build()
     }
 }
