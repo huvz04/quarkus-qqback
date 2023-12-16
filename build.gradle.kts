@@ -6,8 +6,10 @@ plugins {
 }
 
 repositories {
+//    maven { url = uri("https://repository.aspose.com/repo/") }
     mavenCentral()
     mavenLocal()
+
 }
 
 val quarkusPlatformGroupId: String by project
@@ -19,21 +21,31 @@ dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
     implementation("io.quarkus:quarkus-resteasy-reactive-jackson")
     implementation("io.quarkus:quarkus-resteasy-reactive-links")
+    implementation("io.quarkus:quarkus-resteasy-reactive-qute")
     implementation("io.quarkus:quarkus-websockets")
     implementation("io.quarkus:quarkus-kotlin")
-    //implementation("io.quarkus:quarkus-logging-json")
+    //由于整合到docker中存在兼容问题,同时没能找到好用方便的dockerFile 此依赖废除  换用selenium
+    //implementation("io.github.fanyong920:jvppeteer:1.1.5")
+    implementation("org.seleniumhq.selenium:selenium-java:4.16.1")
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    implementation("com.google.guava:guava:32.1.3-jre")
 
-    // ???????
-    // https://mvnrepository.com/artifact/io.github.fanyong920/jvppeteer
-    implementation("io.github.fanyong920:jvppeteer:1.1.5")
+// https://mvnrepository.com/artifact/io.quarkus/quarkus-scheduler
+    implementation("io.quarkus:quarkus-scheduler")
+// https://mvnrepository.com/artifact/io.quarkus/quarkus-qute
+    implementation("io.quarkus:quarkus-qute")
 
 
-    implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation("io.ktor:ktor-client-cio:$ktor_version")
-// https://mvnrepository.com/artifact/com.google.code.gson/gson
+
+
+    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+    //  https://mvnrepository.com/artifact/com.google.code.gson/gson
     implementation("com.google.code.gson:gson:2.10.1")
-// https://mvnrepository.com/artifact/io.quarkiverse.freemarker/quarkus-freemarker
+    // https://mvnrepository.com/artifact/io.quarkiverse.freemarker/quarkus-freemarker
     implementation("io.quarkiverse.freemarker:quarkus-freemarker:1.0.0")
+
 
     implementation("io.quarkus:quarkus-jdbc-postgresql")
     implementation("io.quarkus:quarkus-resteasy-reactive-kotlin-serialization")

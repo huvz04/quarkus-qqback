@@ -1,0 +1,29 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="docker/Dockerfile.jvm" type="docker-deploy" factoryName="dockerfile" server-name="Docker2">
+    <deployment type="dockerfile">
+      <settings>
+        <option name="containerName" value="quarkusq" />
+        <option name="envVars">
+          <list>
+            <DockerEnvVarImpl>
+              <option name="name" value="port" />
+              <option name="value" value="9085" />
+            </DockerEnvVarImpl>
+          </list>
+        </option>
+        <option name="portBindings">
+          <list>
+            <DockerPortBindingImpl>
+              <option name="containerPort" value="9085" />
+              <option name="hostIp" value="0.0.0.0" />
+              <option name="hostPort" value="9085" />
+            </DockerPortBindingImpl>
+          </list>
+        </option>
+        <option name="commandLineOptions" value="--net=host" />
+        <option name="sourceFilePath" value="Dockerfile.jvm" />
+      </settings>
+    </deployment>
+    <method v="2" />
+  </configuration>
+</component>
