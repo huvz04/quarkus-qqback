@@ -30,40 +30,45 @@ class BrowserFactory {
                 // 设置 Cookie
                 webDriver.manage().addCookie(cookie)
                 webDriver.navigate().refresh()
-                val element = webDriver.findElement(By.id("user-show-detail"))
-                val base64 = element.getScreenshotAs(OutputType.BYTES)
+                var element:  WebElement? = null;
+                element = try {
+                         webDriver.findElement(By.id("user-show-detail"))
+                    }catch (e:NoSuchElementException) {
+                        //如果找不到结果就抓404的
+                        webDriver.findElement(By.className("content"))
+                    }catch (e:Exception){
+                        webDriver.findElement(By.className("ui_basic"))
+                    }
+                val base64 = element?.getScreenshotAs(OutputType.BYTES)
                 webDriver.close();
                 webDriver.quit()
                 return base64;
 
-        }catch (e:Exception) {
-
-            if (webDriver != null) {
-                webDriver.close();
-                webDriver.quit()
-            }
-            log.error("出现异常${e.message}")
+        }catch (e:Exception){
+            webDriver?.close();
+            webDriver?.quit()
+            log.error("erro in ${e}")
+            return null;
         }
-        return null
     }
 
 
     fun htmlToImg(name:String): ByteArray? {
         var webDriver: RemoteWebDriver? = null
-        try {
+        return try {
             webDriver = GitWebDriver().getWebDriver()
-            webDriver.get("http://127.0.0.1:9085/v2api/view/gitee?name=${name}")
-            val base64 = (webDriver as TakesScreenshot).getScreenshotAs(OutputType.BYTES)
+            log.info("http://43.142.135.84:9085/v2api/view/gitee?name=${name}");
+            webDriver.get("http://43.142.135.84:9085/v2api/view/gitee?name=${name}")
+            webDriver.findElement(By.id("detail"))
+            val base64 = webDriver.getScreenshotAs(OutputType.BYTES)
             webDriver.close();
             webDriver.quit()
-            return base64
+            base64
         }catch (e:Exception){
-            if (webDriver != null) {
-                webDriver.close();
-                webDriver.quit()
-            }
+            webDriver?.close();
+            webDriver?.quit()
             log.error("erro in ${e}")
-            return null;
+            null;
         }
 
 

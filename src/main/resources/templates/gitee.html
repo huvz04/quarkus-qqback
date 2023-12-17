@@ -10,7 +10,7 @@
             margin-bottom: 10px;
             display: flex;
             align-items: center;
-            width: 450px;
+            width: 375px;
         }
 
         .avatar {
@@ -36,25 +36,27 @@
     </style>
 </head>
 <body>
-<div class="results">
-    <div style="font-size: large"  >搜索结果如下:</div>
-    <br>
-    <!-- Render each search result -->
-    {#for user in users}
-        <div class="result">
-        <img class="avatar" src="{user.avatarUrl}" alt="Avatar">
-        <div class="info">
-        <h3>{user.name}</h3>
-        <p>Login: {user.login}</p>
-        <p>
-        Profile:
-        <a href="{user.url}">{user.url}</a>
-        </p>
-        </div>
-        </div>
-    {/for}
+<div id="detail">
+    <div class="results">
+        <div style="font-size: large"  >Result:</div>
+        <br>
+        <!-- Render each search result -->
+        {#for user in users}
+            <div class="result">
+            <img class="avatar" src="{user.avatarUrl}" alt="Avatar">
+            <div class="info">
+            <h3>{user.name}</h3>
+            <p>Login: {user.login}</p>
+            <p>
+            Profile:
+            <a href="{user.url}">{user.url}</a>
+            </p>
+            </div>
+            </div>
+        {/for}
 
+    </div>
+    <div><p style="color: #0D1C2C">info 1...5</p></div>
 </div>
-<div><p style="color: #0D1C2C">最多只显示五条记录喵！</p></div>
 </body>
 </html>
