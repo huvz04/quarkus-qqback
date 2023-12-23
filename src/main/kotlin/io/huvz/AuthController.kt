@@ -67,10 +67,12 @@ class AuthController {
     suspend fun getInfo(@RestQuery url:String,@RestQuery name:String): Response? {
         try {
             when (url) {
+                //gitee查询
                 "gitee"-> return Uni.createFrom().item(Response.ok(browserService.getUrl4img(name)).build()).awaitSuspending();
-                "nowcoder"-> return Uni.createFrom().item(Response.ok(browserService.nkToImg(name)).build()).awaitSuspending();
-                "nc"-> return Uni.createFrom().item(Response.ok(browserService.nkToImg(name)).build()).awaitSuspending();
-                "nk"-> return  Uni.createFrom().item(Response.ok(browserService.nkToImg(name)).build()).awaitSuspending();
+                //牛客查询
+                "nowcoder","nc","nk"-> return Uni.createFrom().item(Response.ok(browserService.nkToImg(name)).build()).awaitSuspending();
+                //jhc课表查询
+                "jhc" -> return Uni.createFrom().item(Response.ok(browserService.jhcToClass(name)).build()).awaitSuspending();
             }
             return Uni.createFrom().item(Response.ok(browserService.getUrl4img(name)).build()).awaitSuspending();
         } catch (failure: Throwable) {

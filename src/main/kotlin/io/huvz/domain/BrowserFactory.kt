@@ -1,11 +1,10 @@
 package io.huvz.domain
 
 import io.huvz.client.GitWebDriver
-import io.smallrye.common.annotation.Blocking
-import io.smallrye.mutiny.Uni
-
+import io.huvz.config.MyAppConfig
 import io.vertx.core.http.impl.HttpClientConnection.log
 import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -18,13 +17,11 @@ import java.awt.Color
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import java.time.Duration
-import java.util.concurrent.TimeUnit
 import javax.imageio.ImageIO
 
 
 @ApplicationScoped
 class BrowserFactory {
-
 
 
     val WIDTH = 600;
@@ -87,7 +84,38 @@ class BrowserFactory {
 
 
     }
+    fun jhcToClass(name:String): ByteArray? {
+        var webDriver: RemoteWebDriver? = null
+        return try {
+            webDriver = GitWebDriver().getWebDriver()
+            val JhcUrl = "https://webvpn.jhc.cn/"
+            //log.info("http://43.142.135.84:9085/v2api/view/gitee?name=${name}");
+            webDriver.get(JhcUrl)
+            // 找到用户名输入框，并填写用户名
+            val usernameInput: WebElement = webDriver.findElement(By.id("user_name"))
+            usernameInput.sendKeys(MyAppConfig.username)
+            // 找到密码输入框，并填写密码
+            val passwordInput: WebElement = webDriver.findElement(By.name("password"))
+            passwordInput.sendKeys(MyAppConfig.password)
 
+            val submitButton: WebElement = webDriver.findElement(By.id("login"))
+            submitButton.click()
+
+            val JHcjwglxt = "https://webvpn.jhc.cn//https/77726476706e69737468656265737421fae046903f24265a760bc7af96/"
+            //val s = webDriver.findElement(By.className("detail1"))
+            val base64 = webDriver.getScreenshotAs(OutputType.BYTES)
+            webDriver.close();
+            webDriver.quit()
+            base64
+        }catch (e:Exception){
+            webDriver?.close();
+            webDriver?.quit()
+            log.error("erro in ${e}")
+            null;
+        }
+
+
+    }
 
     suspend fun nkToImg(name: String): ByteArray? = runBlocking {
         var webDriver: RemoteWebDriver? = null

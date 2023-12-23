@@ -2,8 +2,7 @@
 .gradle/
 build/
 #私人文件
-GitHttpClient.kt
-application.properties
+MyAppConfig.java
 # Eclipse
 .project
 .classpath
