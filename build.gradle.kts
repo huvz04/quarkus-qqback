@@ -46,7 +46,7 @@ dependencies {
     // https://mvnrepository.com/artifact/io.quarkiverse.freemarker/quarkus-freemarker
     implementation("io.quarkiverse.freemarker:quarkus-freemarker:1.0.0")
 
-
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2")
     implementation("io.quarkus:quarkus-jdbc-postgresql")
     implementation("io.quarkus:quarkus-resteasy-reactive-kotlin-serialization")
     implementation("org.jetbrains.kotlin:kotlin-serialization")

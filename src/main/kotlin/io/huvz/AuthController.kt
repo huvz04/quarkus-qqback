@@ -52,4 +52,14 @@ class AuthController {
     }
 
 
+    @Path("/info")
+    @POST
+    @Produces("image/jpeg")
+    suspend fun getInfo(@RestQuery url:String,@RestQuery name:String): Response?{
+        when (url) {
+            "gitee"-> return Response.ok(browserService.getUrl4img(name)).build();
+            "nowcoder"-> return Response.ok(browserService.nkToImg(name)).build();
+        }
+        return Response.ok(browserService.getUrl4img(name)).build();
+    }
 }

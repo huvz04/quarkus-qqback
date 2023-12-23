@@ -1,7 +1,6 @@
-package io.huvz.Controller
+package io.huvz.controller
 
 import io.huvz.client.GitHttpClient
-import io.huvz.client.GiteeApiClient
 import io.huvz.domain.GiteeApi
 import io.huvz.domain.vo.GiteeUsers
 import io.quarkus.qute.Template
@@ -13,12 +12,10 @@ import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import kotlinx.serialization.json.Json
 import org.jboss.resteasy.reactive.RestQuery
-import java.io.BufferedReader
-import java.io.IOException
 
 
 @Path("/v2api/view")
-class InterfaceBResource {
+class ResourceController {
     @Inject
     lateinit var gitee: Template
     @GET
