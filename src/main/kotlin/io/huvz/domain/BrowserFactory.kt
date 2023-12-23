@@ -1,6 +1,9 @@
 package io.huvz.domain
 
 import io.huvz.client.GitWebDriver
+import io.smallrye.common.annotation.Blocking
+import io.smallrye.mutiny.Uni
+
 import io.vertx.core.http.impl.HttpClientConnection.log
 import jakarta.enterprise.context.ApplicationScoped
 import kotlinx.coroutines.Dispatchers
@@ -15,6 +18,7 @@ import java.awt.Color
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import java.time.Duration
+import java.util.concurrent.TimeUnit
 import javax.imageio.ImageIO
 
 
@@ -85,22 +89,20 @@ class BrowserFactory {
     }
 
 
-
-    fun nkToImg(name: String): ByteArray? = runBlocking {
+    suspend fun nkToImg(name: String): ByteArray? = runBlocking {
         var webDriver: RemoteWebDriver? = null
         return@runBlocking try {
             webDriver = GitWebDriver().getWebDriver()
             var base64: ByteArray? = null
-            val windowSize = Dimension(1200, 900)
-            webDriver.manage().window().size = windowSize
-            val windowPosition = Point(500, 100)
-            webDriver.manage().window().position = windowPosition
+                val windowSize = Dimension(1200, 900)
+                val windowPosition = Point(500, 100)
+                webDriver.manage().window().position = windowPosition
+                webDriver.manage().window().size = windowSize
             val waitDuration = Duration.ofSeconds(10) // 等待时间为 10 秒
             val nowcodeapi = "https://www.nowcoder.com/search/user?query=$name&type=user&searchType=%E6%90%9C%E7%B4%A2%E9%A1%B5%E8%BE%93%E5%85%A5%E6%A1%86&subType=0"
             val wait = WebDriverWait(webDriver,waitDuration ) // 设置最大等待时间为10秒
             log.info(nowcodeapi)
             webDriver.get(nowcodeapi)
-
             val divElement: WebElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("user-card-list")))
             log.info("has found $divElement")
 
@@ -114,14 +116,14 @@ class BrowserFactory {
                 log.info("请求的 URL：$getUrl")
 
                 webDriver.get(getUrl)
-                val profileInfoWrapper: WebElement = webDriver.findElement(By.className("profile-info-wrapper"))
-                val myStateMain: WebElement = webDriver.findElement(By.className("my-state-main"))
-                val ratingState: WebElement = webDriver.findElement(By.className("rating-state"))
+                val profileInfoWrapper: WebElement =  wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("profile-info-wrapper")))
+                val myStateMain: WebElement =  wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("my-state-main")))
+                val ratingState: WebElement =  wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("rating-state")))
 
                 val elements = listOf(myStateMain, ratingState)
 
                 val targetWidth = 1200
-                val targetHeight = 800
+                val targetHeight = 750
                 val combinedImage = BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB)
 
                 val g = combinedImage.createGraphics()
@@ -160,7 +162,7 @@ class BrowserFactory {
             webDriver?.close()
             webDriver?.quit()
             log.error("erro has in : $e")
-            null
+           null
         }
     }
 

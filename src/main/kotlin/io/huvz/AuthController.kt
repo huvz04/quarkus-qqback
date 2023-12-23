@@ -1,17 +1,22 @@
 package io.huvz
 
 
-import io.huvz.client.GitHttpClient
-import io.huvz.domain.*
-import io.huvz.domain.vo.GiteeUsers
+import io.huvz.domain.BrowserFactory
+import io.huvz.domain.DeMessage
 import io.quarkus.qute.Template
+import io.smallrye.mutiny.Uni
+import io.smallrye.mutiny.coroutines.awaitSuspending
+
+import io.vertx.core.VertxOptions
+import io.vertx.mutiny.core.Vertx
 import jakarta.inject.Inject
-import jakarta.ws.rs.*
+import jakarta.ws.rs.GET
+import jakarta.ws.rs.POST
+import jakarta.ws.rs.Path
+import jakarta.ws.rs.Produces
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
-import kotlinx.serialization.json.Json
 import org.jboss.resteasy.reactive.RestQuery
-import java.util.*
 
 
 @Path("/v2api/bot")
@@ -21,6 +26,10 @@ class AuthController {
 
     @Inject
     lateinit var gitee: Template
+
+
+    @Inject
+    lateinit var  vertx: Vertx
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -55,11 +64,18 @@ class AuthController {
     @Path("/info")
     @POST
     @Produces("image/jpeg")
-    suspend fun getInfo(@RestQuery url:String,@RestQuery name:String): Response?{
-        when (url) {
-            "gitee"-> return Response.ok(browserService.getUrl4img(name)).build();
-            "nowcoder"-> return Response.ok(browserService.nkToImg(name)).build();
+    suspend fun getInfo(@RestQuery url:String,@RestQuery name:String): Response? {
+        try {
+            when (url) {
+                "gitee"-> return Uni.createFrom().item(Response.ok(browserService.getUrl4img(name)).build()).awaitSuspending();
+                "nowcoder"-> return Uni.createFrom().item(Response.ok(browserService.nkToImg(name)).build()).awaitSuspending();
+                "nc"-> return Uni.createFrom().item(Response.ok(browserService.nkToImg(name)).build()).awaitSuspending();
+                "nk"-> return  Uni.createFrom().item(Response.ok(browserService.nkToImg(name)).build()).awaitSuspending();
+            }
+            return Uni.createFrom().item(Response.ok(browserService.getUrl4img(name)).build()).awaitSuspending();
+        } catch (failure: Throwable) {
+            return Response.status(500).entity("异步处理失败").build();
         }
-        return Response.ok(browserService.getUrl4img(name)).build();
+
     }
 }
