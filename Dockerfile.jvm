@@ -80,8 +80,7 @@
 FROM registry.access.redhat.com/ubi8/openjdk-17:1.18
 
 ENV LANGUAGE='en_US:en'
-ENV QUARKUS_CONFIG_PROPERTY="10s"
-
+ENV QUARKUS_VERTX_MAX_EVENT_LOOP_EXECUTE_TIME="10S"
 # We make four distinct layers so if there are application changes the library layers can be re-used
 
 COPY --chown=185 build/quarkus-app/*.jar /deployments/

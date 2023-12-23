@@ -84,25 +84,31 @@ class BrowserFactory {
 
 
     }
-    fun jhcToClass(name:String): ByteArray? {
+    suspend fun jhcToClass(name:String): ByteArray?  = runBlocking {
         var webDriver: RemoteWebDriver? = null
-        return try {
+        return@runBlocking try {
             webDriver = GitWebDriver().getWebDriver()
-            val JhcUrl = "https://webvpn.jhc.cn/"
+            val JhcUrl = "https://webvpn.jhc.cn/login"
+            log.info(JhcUrl)
             //log.info("http://43.142.135.84:9085/v2api/view/gitee?name=${name}");
             webDriver.get(JhcUrl)
             // 找到用户名输入框，并填写用户名
-            val usernameInput: WebElement = webDriver.findElement(By.id("user_name"))
-            usernameInput.sendKeys(MyAppConfig.username)
-            // 找到密码输入框，并填写密码
-            val passwordInput: WebElement = webDriver.findElement(By.name("password"))
-            passwordInput.sendKeys(MyAppConfig.password)
 
-            val submitButton: WebElement = webDriver.findElement(By.id("login"))
-            submitButton.click()
+                val waitDuration = Duration.ofSeconds(10)
+                val wait = WebDriverWait(webDriver,waitDuration ) // 设置最大等待时间为10秒
 
-            val JHcjwglxt = "https://webvpn.jhc.cn//https/77726476706e69737468656265737421fae046903f24265a760bc7af96/"
-            //val s = webDriver.findElement(By.className("detail1"))
+//                val usernameInput: WebElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("user_name")));
+//                usernameInput.sendKeys(MyAppConfig.username)
+//                // 找到密码输入框，并填写密码
+//                val passwordInput: WebElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("password")))
+//                passwordInput.sendKeys(MyAppConfig.password)
+//
+//                val submitButton: WebElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login")))
+//                submitButton.click()
+//                log.info(submitButton)
+//                val JHcjwglxt = "https://webvpn.jhc.cn/https/77726476706e69737468656265737421fae046903f24265a760bc7af96/"
+//                log.info(JHcjwglxt)
+//                webDriver.get(JHcjwglxt)
             val base64 = webDriver.getScreenshotAs(OutputType.BYTES)
             webDriver.close();
             webDriver.quit()

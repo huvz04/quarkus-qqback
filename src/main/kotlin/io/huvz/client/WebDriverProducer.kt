@@ -20,8 +20,8 @@ class GitWebDriver {
 
 
         options.setScriptTimeout(timeout); // 设置脚本执行超时时间为 30 秒
-        timeout = Duration.ofSeconds(60)
-        options.setPageLoadTimeout(timeout) // 设置页面加载超时时间为 60 秒
+        timeout = Duration.ofSeconds(30)
+        options.setPageLoadTimeout(timeout) // 设置页面加载超时时间为 30 秒
         options.addArguments("--headless")
         options.addArguments("--no-sandbox") // fix:DevToolsActivePort file doesn't exist
         options.addArguments("--disable-gpu")  // fix:DevToolsActivePort file doesn't exist
@@ -29,7 +29,7 @@ class GitWebDriver {
         options.addArguments("disable-notifications"); // 禁用通知
 //        options.addArguments("--disable-dev-shm-usage")  // fix:DevToolsActivePort file doesn't exist
 //        options.addArguments("--remote-debugging-port=9222")  // fix:DevToolsActivePort file doesn't
-        log.info("http://${host}:4444")
+        log.info("${host}:${port}")
         return options
     }
 
