@@ -1,7 +1,9 @@
 # Gradle
 .gradle/
 build/
-
+#私人文件
+GitHttpClient.kt
+application.properties
 # Eclipse
 .project
 .classpath
