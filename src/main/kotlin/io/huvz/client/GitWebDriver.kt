@@ -1,7 +1,7 @@
 package io.huvz.client
 
 import io.vertx.core.http.impl.HttpClientConnection.log
-import org.jetbrains.kotlin.konan.target.HostManager
+import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.remote.RemoteWebDriver
 import java.net.URL
@@ -22,7 +22,7 @@ class GitWebDriver {
         options.setScriptTimeout(timeout); // 设置脚本执行超时时间为 30 秒
         timeout = Duration.ofSeconds(30)
         options.setPageLoadTimeout(timeout) // 设置页面加载超时时间为 30 秒
-        options.addArguments("--headless")
+//        options.addArguments("--headless")
         options.addArguments("--no-sandbox") // fix:DevToolsActivePort file doesn't exist
         options.addArguments("--disable-gpu")  // fix:DevToolsActivePort file doesn't exist
         options.addArguments("disable-infobars"); // 禁用信息栏
@@ -36,6 +36,11 @@ class GitWebDriver {
 
     fun getWebDriver(): RemoteWebDriver {
         val webDriver = RemoteWebDriver(URL("${host}:${port}"), getOptions())
+        return webDriver
+    }
+
+    fun getTestWebDriver(): ChromeDriver {
+        val webDriver = ChromeDriver(getOptions())
         return webDriver
     }
 }

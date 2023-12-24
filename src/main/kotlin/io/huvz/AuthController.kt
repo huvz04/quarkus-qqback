@@ -1,14 +1,13 @@
 package io.huvz
 
 
-import io.huvz.domain.BrowserFactory
 import io.huvz.domain.DeMessage
-import io.quarkus.qute.Template
+import io.huvz.service.impl.GiteeSerivce
+import io.huvz.service.impl.JhcService
+import io.huvz.service.impl.NcService
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.coroutines.awaitSuspending
 
-import io.vertx.core.VertxOptions
-import io.vertx.mutiny.core.Vertx
 import jakarta.inject.Inject
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.POST
@@ -22,14 +21,12 @@ import org.jboss.resteasy.reactive.RestQuery
 @Path("/v2api/bot")
 class AuthController {
     @Inject
-    lateinit var browserService : BrowserFactory;
-
+    lateinit var  jhcService: JhcService;
     @Inject
-    lateinit var gitee: Template
-
-
+    lateinit var giteeSerivce : GiteeSerivce;
     @Inject
-    lateinit var  vertx: Vertx
+    lateinit var ncService : NcService;
+
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -48,7 +45,7 @@ class AuthController {
     @Produces("image/jpeg")
     fun gitee2img(@RestQuery name:String): Response? {
         //val imageBytes: ByteArray? = Base64.getDecoder().decode(browserService.getUrl4img(name)?:"1")
-        return Response.ok(browserService.getUrl4img(name)).build();
+        return Response.ok(giteeSerivce.getUrl4img(name)).build();
     }
 
     @Path("/searchGitee")
@@ -57,7 +54,7 @@ class AuthController {
     @Produces("image/jpeg")
     suspend fun searchgitee(@RestQuery name:String): Response? {
 
-        return Response.ok( browserService.htmlToImg(name)).build();
+        return Response.ok( giteeSerivce.htmlToImg(name)).build();
     }
 
 
@@ -68,13 +65,14 @@ class AuthController {
         try {
             when (url) {
                 //gitee查询
-                "gitee"-> return Uni.createFrom().item(Response.ok(browserService.getUrl4img(name)).build()).awaitSuspending();
+                "gitee"-> return Uni.createFrom().item(Response.ok(giteeSerivce.getUrl4img(name)).build()).awaitSuspending();
                 //牛客查询
-                "nowcoder","nc","nk"-> return Uni.createFrom().item(Response.ok(browserService.nkToImg(name)).build()).awaitSuspending();
+                "nowcoder","nc","nk"-> return Uni.createFrom().item(Response.ok(ncService.nkToImg(name)).build()).awaitSuspending();
                 //jhc课表查询
-                "jhc" -> return Uni.createFrom().item(Response.ok(browserService.jhcToClass(name)).build()).awaitSuspending();
+                "jhc" -> return Uni.createFrom().item(Response.ok(jhcService.jhcToClass(name)).build()).awaitSuspending();
             }
-            return Uni.createFrom().item(Response.ok(browserService.getUrl4img(name)).build()).awaitSuspending();
+            //默认用gitee
+            return Uni.createFrom().item(Response.ok(giteeSerivce.getUrl4img(name)).build()).awaitSuspending();
         } catch (failure: Throwable) {
             return Response.status(500).entity("异步处理失败").build();
         }

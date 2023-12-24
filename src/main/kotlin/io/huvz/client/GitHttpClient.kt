@@ -5,7 +5,9 @@ import io.huvz.domain.GiteeApi
 import okhttp3.*
 import java.io.IOException
 
-
+/**
+ * gitee查询初始化客户端
+ */
 class GitHttpClient {
 
     val giteekey = MyAppConfig.giteekey;

@@ -2,7 +2,7 @@
 .gradle/
 build/
 #私人文件
-MyAppConfig.java
+MyAppConfig.kt
 # Eclipse
 .project
 .classpath
@@ -38,3 +38,4 @@ nb-configuration.xml
 
 # Plugin directory
 /.quarkus/cli/plugins/
+/src/main/kotlin/io/huvz/config/MyAppConfig.kt
