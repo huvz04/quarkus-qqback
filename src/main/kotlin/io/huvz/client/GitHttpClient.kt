@@ -17,7 +17,7 @@ class GitHttpClient {
 
         // 构建请求URL
         val urlBuilder = HttpUrl.parse(url)!!.newBuilder()
-        urlBuilder.addQueryParameter("p", name)
+        urlBuilder.addQueryParameter("q", name)
         urlBuilder.addQueryParameter("access_token", giteekey)
         val url1 = urlBuilder.build().toString()
         val request: Request = Request.Builder()

@@ -1,6 +1,6 @@
 package io.huvz.domain.vo
 
-import io.huvz.client.MyClass
+
 import kotlinx.serialization.SerialName
 
 @kotlinx.serialization.Serializable

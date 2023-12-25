@@ -3,6 +3,7 @@ package io.huvz
 
 import io.huvz.domain.DeMessage
 import io.huvz.service.impl.GiteeSerivce
+import io.huvz.service.impl.GithubSerivce
 import io.huvz.service.impl.JhcService
 import io.huvz.service.impl.NcService
 import io.smallrye.mutiny.Uni
@@ -26,7 +27,8 @@ class AuthController {
     lateinit var giteeSerivce : GiteeSerivce;
     @Inject
     lateinit var ncService : NcService;
-
+    @Inject
+    lateinit var githubSerivce: GithubSerivce;
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -66,10 +68,13 @@ class AuthController {
             when (url) {
                 //gitee查询
                 "gitee"-> return Uni.createFrom().item(Response.ok(giteeSerivce.getUrl4img(name)).build()).awaitSuspending();
+                //gitee用户查询
+                "gitee用户","giteeUser"-> return Uni.createFrom().item(Response.ok(giteeSerivce.htmlToImg(name)).build()).awaitSuspending();
                 //牛客查询
                 "nowcoder","nc","nk"-> return Uni.createFrom().item(Response.ok(ncService.nkToImg(name)).build()).awaitSuspending();
                 //jhc课表查询
                 "jhc" -> return Uni.createFrom().item(Response.ok(jhcService.jhcToClass(name)).build()).awaitSuspending();
+                "github" -> return Uni.createFrom().item(Response.ok(githubSerivce.getimg(name)).build()).awaitSuspending();
             }
             //默认用gitee
             return Uni.createFrom().item(Response.ok(giteeSerivce.getUrl4img(name)).build()).awaitSuspending();
