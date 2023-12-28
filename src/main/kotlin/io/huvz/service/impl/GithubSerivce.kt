@@ -23,8 +23,9 @@ class GithubSerivce : IApiService{
             webDriver.manage().window().size = windowSize
             // 创建一个 Cookie 对象
             //val url = "https://github.com/$name"
+            val url = "https://hub.nuaa.cf/$name"
             //更换为镜像地址
-            val url = "https://hub.yzuu.cf/$name"
+            //val url = "https://hub.yzuu.cf/$name"
             log.info(url)
             webDriver.get(url)
             var element:  WebElement? = null;

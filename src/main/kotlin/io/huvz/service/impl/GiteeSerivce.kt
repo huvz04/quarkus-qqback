@@ -18,7 +18,7 @@ class GiteeSerivce : IApiService{
         try{
             webDriver = GitWebDriver().getWebDriver()
             // 设置窗口大小
-            val windowSize = Dimension(1280, 800)
+            val windowSize = Dimension(1280, 2000)
             webDriver.manage().window().size = windowSize
             // 创建一个 Cookie 对象
             webDriver.get("https://gitee.com/$name")
