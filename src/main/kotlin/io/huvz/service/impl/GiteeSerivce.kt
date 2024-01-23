@@ -14,9 +14,9 @@ class GiteeSerivce : IApiService{
      * 获取gitee主页
      */
     fun getUrl4img(name:String): ByteArray? {
-        var webDriver: RemoteWebDriver? = null
+        var webDriver: WebDriver? = null
         try{
-            webDriver = GitWebDriver().getWebDriver()
+            webDriver = GitWebDriver().getDriver()
             // 设置窗口大小
             val windowSize = Dimension(1280, 2000)
             webDriver.manage().window().size = windowSize
@@ -52,9 +52,9 @@ class GiteeSerivce : IApiService{
      * 渲染Gitee查询接口
      */
     fun htmlToImg(name:String): ByteArray? {
-        var webDriver: RemoteWebDriver? = null
+        var webDriver: WebDriver? = null
         return try {
-            webDriver = GitWebDriver().getWebDriver()
+            webDriver = GitWebDriver().getDriver()
             HttpClientConnection.log.info("http://43.142.135.84:9085/v2api/view/gitee?name=${name}");
             webDriver.get("http://43.142.135.84:9085/v2api/view/gitee?name=${name}")
             val s = webDriver.findElement(By.className("detail1"))

@@ -24,9 +24,9 @@ class NcService:IApiService {
      * 牛客查询图片
      */
     suspend fun nkToImg(name: String): ByteArray? = runBlocking {
-        var webDriver: RemoteWebDriver? = null
+        var webDriver: WebDriver? = null
         return@runBlocking try {
-            webDriver = GitWebDriver().getWebDriver()
+            webDriver = GitWebDriver().getDriver()
             var base64: ByteArray? = null
             val windowSize = Dimension(1200, 900)
             val windowPosition = Point(500, 100)
@@ -86,7 +86,8 @@ class NcService:IApiService {
                 ImageIO.write(combinedImage, "png", outputStream)
                 base64 = outputStream.toByteArray()
             } else {
-                base64 = webDriver.getScreenshotAs(OutputType.BYTES)
+                val indexhtml: WebElement =  wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("nk-container")))
+                base64 = indexhtml.getScreenshotAs(OutputType.BYTES)
             }
 
             webDriver.close()

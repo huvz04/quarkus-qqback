@@ -1,6 +1,7 @@
 package io.huvz.client
 
 import io.vertx.core.http.impl.HttpClientConnection.log
+import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.remote.RemoteWebDriver
@@ -38,8 +39,16 @@ class GitWebDriver {
         val webDriver = RemoteWebDriver(URL("${host}:${port}"), getOptions())
         return webDriver
     }
-
-    fun getTestWebDriver(): ChromeDriver {
+    fun getDriver(): WebDriver {
+        var webDriver:WebDriver;
+        try{
+            webDriver = ChromeDriver();
+        }catch (e:Exception){
+            webDriver = getWebDriver();
+        }
+        return webDriver;
+    }
+    fun getLocalDriver(): ChromeDriver {
         val webDriver = ChromeDriver(getOptions())
         return webDriver
     }
