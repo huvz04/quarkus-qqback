@@ -51,12 +51,13 @@ class GiteeSerivce : IApiService{
     /**
      * 渲染Gitee查询接口
      */
-    fun htmlToImg(name:String): ByteArray? {
+    fun htmlToImg(name:String,num:Int): ByteArray? {
         var webDriver: WebDriver? = null
         return try {
             webDriver = GitWebDriver().getDriver()
-            HttpClientConnection.log.info("http://43.142.135.84:9085/v2api/view/gitee?name=${name}");
-            webDriver.get("http://43.142.135.84:9085/v2api/view/gitee?name=${name}")
+            val url = "http://localhost:9085/v2api/view/gitee?name=${name}&num=${num}";
+            HttpClientConnection.log.info(url);
+            webDriver.get(url)
             val s = webDriver.findElement(By.className("detail1"))
             val base64 = s.getScreenshotAs(OutputType.BYTES)
             webDriver.close();

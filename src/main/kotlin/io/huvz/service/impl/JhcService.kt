@@ -30,9 +30,9 @@ class JhcService {
 
 
     suspend fun login(): OkHttpClient?  = runBlocking {
-        var webDriver: RemoteWebDriver? = null
+        var webDriver: WebDriver? = null
         return@runBlocking try {
-            webDriver = GitWebDriver().getTestWebDriver()
+            webDriver = GitWebDriver().getDriver()
             val JhcUrl = "https://webvpn.jhc.cn/login"
             log.info(JhcUrl)
             webDriver.get(JhcUrl)

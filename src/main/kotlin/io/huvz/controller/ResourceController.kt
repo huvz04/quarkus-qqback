@@ -21,8 +21,7 @@ class ResourceController {
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/gitee")
-    fun page(@RestQuery name:String): Any? {
-
+    fun page(@RestQuery name:String,@RestQuery num:Int=5): Any? {
             val client = GitHttpClient();
             val httpre = client.get(GiteeApi.SEARCH_USER.url,name) ?: return Response.status(500).entity("<h1>500</h1><br><h1>服务器内部错误</h1>").build()
 //        if(httpre.s.value!=200) return Response.status(403).entity("远程服务器拒绝了操作").build();
@@ -30,7 +29,7 @@ class ResourceController {
             val json  = Json(){ignoreUnknownKeys=true}
             var list: Array<GiteeUsers>? = body.let { it?.let { it1 -> json.decodeFromString<Array<GiteeUsers>>(it1) } }
             if (list != null) {
-                list = list.take(5).toTypedArray()
+                list = list.take(num).toTypedArray()
             }
             return gitee.data("users", list).render()
         }

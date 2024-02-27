@@ -54,22 +54,22 @@ class AuthController {
     @POST
     //@Produces(MediaType.APPLICATION_JSON)
     @Produces("image/jpeg")
-    suspend fun searchgitee(@RestQuery name:String): Response? {
+    suspend fun searchgitee(@RestQuery name:String,@RestQuery num:Int): Response? {
 
-        return Response.ok( giteeSerivce.htmlToImg(name)).build();
+        return Response.ok( giteeSerivce.htmlToImg(name,num)).build();
     }
 
 
     @Path("/info")
     @POST
     @Produces("image/jpeg")
-    suspend fun getInfo(@RestQuery url:String,@RestQuery name:String): Response? {
+    suspend fun getInfo(@RestQuery url:String,@RestQuery name:String,@RestQuery(value = "5") num: Int): Response? {
         try {
             when (url) {
                 //gitee查询
                 "gitee"-> return Uni.createFrom().item(Response.ok(giteeSerivce.getUrl4img(name)).build()).awaitSuspending();
                 //gitee用户查询
-                "gitee用户","giteeUser"-> return Uni.createFrom().item(Response.ok(giteeSerivce.htmlToImg(name)).build()).awaitSuspending();
+                "gitee用户","giteeUser"-> return Uni.createFrom().item(Response.ok(giteeSerivce.htmlToImg(name,num)).build()).awaitSuspending();
                 //牛客查询
                 "nowcoder","nc","nk"-> return Uni.createFrom().item(Response.ok(ncService.nkToImg(name)).build()).awaitSuspending();
                 //jhc课表查询

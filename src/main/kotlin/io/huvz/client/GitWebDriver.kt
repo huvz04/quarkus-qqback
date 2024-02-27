@@ -30,7 +30,7 @@ class GitWebDriver {
         options.addArguments("disable-notifications"); // 禁用通知
 //        options.addArguments("--disable-dev-shm-usage")  // fix:DevToolsActivePort file doesn't exist
 //        options.addArguments("--remote-debugging-port=9222")  // fix:DevToolsActivePort file doesn't
-        log.info("${host}:${port}")
+        //log.info("${host}:${port}")
         return options
     }
 
@@ -42,9 +42,10 @@ class GitWebDriver {
     fun getDriver(): WebDriver {
         var webDriver:WebDriver;
         try{
-            webDriver = ChromeDriver();
+            webDriver = ChromeDriver(getOptions());
         }catch (e:Exception){
-            webDriver = getWebDriver();
+            //webDriver = getWebDriver();
+            webDriver = ChromeDriver(getOptions());
         }
         return webDriver;
     }
