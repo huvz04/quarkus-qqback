@@ -4,10 +4,7 @@ import io.huvz.client.GitWebDriver
 import io.huvz.service.IApiService
 import io.vertx.core.http.impl.HttpClientConnection
 import jakarta.enterprise.context.ApplicationScoped
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import org.openqa.selenium.*
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
@@ -65,6 +62,13 @@ class NcService:IApiService {
                 g.clearRect(0, 0, targetWidth, targetHeight)
                 var currentY = 0
 
+                /**
+                 * 最简单的办法是休眠300ms 等加载
+                 */
+                delay(300)
+
+
+
                 val screenshots = elements.map { element ->
                     async(Dispatchers.IO) {
                         ImageIO.read(element.getScreenshotAs(OutputType.FILE))
@@ -91,7 +95,7 @@ class NcService:IApiService {
             }
 
             webDriver.close()
-            webDriver.quit()
+            //webDriver.quit()
             base64
         } catch (e: Exception) {
             webDriver?.close()

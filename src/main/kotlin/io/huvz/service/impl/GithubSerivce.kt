@@ -27,19 +27,17 @@ class GithubSerivce : IApiService{
             // 创建一个 Cookie 对象
             //val url = "https://github.com/$name"
             val url = "https://github.com/$name"
-            val nurl = "https://hub.nuaa.cf/$name"
 
             try {
                 webDriver.get(url)
                 // 设置超时时间为10秒
-                val waitDuration = Duration.ofSeconds(10) // 等待时间为 10 秒
+                val waitDuration = Duration.ofSeconds(20) // 等待时间为 10 秒
                 val wait = WebDriverWait(webDriver, waitDuration)
                 // 等待元素加载完成
-                wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("main-content")))
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("js-global-screen-reader-notice")))
                 println("网页加载成功")
             } catch (e: Exception) {
-                println("网页加载超时，切换API")
-                webDriver.get(nurl)
+                println("网页加载超时")
             }
             var element:  WebElement? = null;
             element = try {
@@ -52,7 +50,6 @@ class GithubSerivce : IApiService{
             }
             val base64 = element?.getScreenshotAs(OutputType.BYTES)
             webDriver.close();
-            webDriver.quit()
             return base64;
 
         }catch (e:Exception){

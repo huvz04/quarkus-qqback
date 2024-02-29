@@ -1,6 +1,7 @@
 package io.huvz
 
 
+import io.huvz.client.LocalCache
 import io.huvz.domain.DeMessage
 import io.huvz.service.impl.GiteeSerivce
 import io.huvz.service.impl.GithubSerivce
@@ -30,6 +31,10 @@ class AuthController {
     @Inject
     lateinit var githubSerivce: GithubSerivce;
 
+
+    @Inject
+    lateinit var Lcache :LocalCache;
+
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     fun hello() = "Hello from RESTEasy Reactive"
@@ -54,22 +59,33 @@ class AuthController {
     @POST
     //@Produces(MediaType.APPLICATION_JSON)
     @Produces("image/jpeg")
-    suspend fun searchgitee(@RestQuery name:String,@RestQuery num:Int): Response? {
+    suspend fun searchgitee(@RestQuery name:String): Response? {
 
-        return Response.ok( giteeSerivce.htmlToImg(name,num)).build();
+        return Response.ok( giteeSerivce.htmlToImg(name)).build();
+    }
+
+
+    @Path("/getUser")
+    @POST
+    @Produces("image/jpeg")
+    suspend fun getUser(@RestQuery number:Int) : Response?{
+        if(number>Lcache.cache.size) Response.status(500,"没有数据")
+        val name = Lcache.cache.get(number-1).login
+
+        return Response.ok(giteeSerivce.getUrl4img(name)).build();
     }
 
 
     @Path("/info")
     @POST
     @Produces("image/jpeg")
-    suspend fun getInfo(@RestQuery url:String,@RestQuery name:String,@RestQuery(value = "5") num: Int): Response? {
+    suspend fun getInfo(@RestQuery url:String,@RestQuery name:String): Response? {
         try {
             when (url) {
                 //gitee查询
                 "gitee"-> return Uni.createFrom().item(Response.ok(giteeSerivce.getUrl4img(name)).build()).awaitSuspending();
                 //gitee用户查询
-                "gitee用户","giteeUser"-> return Uni.createFrom().item(Response.ok(giteeSerivce.htmlToImg(name,num)).build()).awaitSuspending();
+                "gitee用户","giteeUser"-> return Uni.createFrom().item(Response.ok(giteeSerivce.htmlToImg(name)).build()).awaitSuspending();
                 //牛客查询
                 "nowcoder","nc","nk"-> return Uni.createFrom().item(Response.ok(ncService.nkToImg(name)).build()).awaitSuspending();
                 //jhc课表查询

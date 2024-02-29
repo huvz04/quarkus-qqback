@@ -113,7 +113,7 @@ class JhcService {
             // 将转换后的 OkHttp 的 Cookie 添加到 CookieJar 中
             HttpUrl.parse("webvpn.jhc.cn")?.let { webcookie.saveFromResponse(it, okhttpCookies) };
             webDriver.close();
-            webDriver.quit();
+            //webDriver.quit();
             OkHttpClient.Builder()
                 .cookieJar(webcookie)
                 .followRedirects(true)
