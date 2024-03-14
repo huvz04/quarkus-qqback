@@ -1,9 +1,13 @@
 package io.huvz.controller
 
+import com.google.gson.Gson
 import io.huvz.client.GitHttpClient
 import io.huvz.client.LocalCache
+import io.huvz.client.SyHttpClient
 import io.huvz.domain.GiteeApi
 import io.huvz.domain.vo.GiteeUsers
+import io.huvz.domain.zsb.ResponseData
+import io.huvz.domain.zsb.University
 import io.quarkus.qute.Template
 import jakarta.inject.Inject
 import jakarta.ws.rs.GET
@@ -19,7 +23,8 @@ import org.jboss.resteasy.reactive.RestQuery
 class ResourceController {
     @Inject
     lateinit var gitee: Template
-
+    @Inject
+    lateinit var zsbSreach: Template
 
     @Inject
     lateinit var localCache : LocalCache;
@@ -45,4 +50,28 @@ class ResourceController {
             if(list!=null) localCache.cache = list;
             return gitee.data("users", list).render()
         }
+
+
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    @Path("/sy")
+    fun sypage(@RestQuery name:String): Any? {
+
+        val client = SyHttpClient();
+        val httpre = client.get(GiteeApi.SEARCH_SYZSB.url,name) ?: return Response.status(500).entity("<h1>500</h1><br><h1>服务器内部错误</h1>").build()
+//        if(httpre.s.value!=200) return Response.status(403).entity("远程服务器拒绝了操作").build();
+        if(httpre.body()==null) return zsbSreach.render()
+        val body : String = httpre.body()!!.string()
+
+        val json  = Json(){ignoreUnknownKeys=true}
+//        try{
+            val list: ResponseData = json.decodeFromString<ResponseData>(body)
+            val data:List<University> = list.data.universities;
+            return zsbSreach.data("universityVos", data).render()
+//        }catch (e:Exception)
+//        {
+//            return Response.status(500).entity("<h1>500</h1><br><h1>JSON解析错误，都怪上游</h1>").build()
+//        }
+
+    }
 }

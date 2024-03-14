@@ -41,7 +41,7 @@ class NcService:IApiService {
             val anchorCount: Int = anchorElements.size
             if (anchorCount == 1) {
                 val url: String = anchorElements[0].getAttribute("href")
-                HttpClientConnection.log.info("提取到的 URL：$url")
+                HttpClientConnection.log.info("will to URL：$url")
                 val modifiedUrl = url.replace("https://www.nowcoder.com/users/", "")
                 val getUrl = "https://ac.nowcoder.com/acm/contest/profile/$modifiedUrl"
                 HttpClientConnection.log.info("请求的 URL：$getUrl")
@@ -50,7 +50,10 @@ class NcService:IApiService {
                 val profileInfoWrapper: WebElement =  wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("profile-info-wrapper")))
                 val myStateMain: WebElement =  wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("my-state-main")))
                 val ratingState: WebElement =  wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("rating-state")))
-
+                /**
+                 * 最简单的办法是休眠1s 等加载
+                 */
+                delay(1000)
                 val elements = listOf(myStateMain, ratingState)
 
                 val targetWidth = 1200
@@ -62,10 +65,7 @@ class NcService:IApiService {
                 g.clearRect(0, 0, targetWidth, targetHeight)
                 var currentY = 0
 
-                /**
-                 * 最简单的办法是休眠300ms 等加载
-                 */
-                delay(300)
+
 
 
 

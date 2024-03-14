@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ZSB User Search Results</title>
+    <style>
+        .detail1{
+            width: 420px;
+        }
+        .result {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            width: 350px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .major {
+            width: 350px;
+            height: auto;
+            /*border-radius: 50%;*/
+            margin-right: 35px; /* 向右边移动 20px，你可以根据需要进行调整 */
+            border: 2px solid #ccc; /* 添加 2px 的边框，你可以根据需要进行调整 */
+            box-sizing: border-box; /* 确保边框宽度包含在盒子宽度内 */
+        }
+
+        .info {
+            flex: 1;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .info h3 {
+            margin: 0;
+            font-size: 21px;
+            text-align: center;
+        }
+
+        .info p {
+            margin: 5px 0;
+            font-size: 14px;
+            text-align: center;
+        }
+        .mahor div{
+            white-space: nowrap;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="detail1">
+    <div class="results">
+        <br>
+        {#if  universityVos.size > 0 }
+            <!-- Render each search result -->
+            {#for university in universityVos}
+                <div class="result">
+                <div class="info">
+                <h3>{university.name}</h3>
+
+                {#for major in university.universityDtoList}
+                    <div class="major">
+                    <p><b style="color: darkblue">{major.undergraduateName}</b></p> <p>  2023分数线:<b>{major.fractionalLine}</b></p>
+                    <p>学费:
+                        {#if  major.tuition < 10000 }
+                            <b style=" color: darkgreen">{major.tuition}</b>
+                        {/if}
+                        {#if  major.tuition >= 10000 }
+                            <b style="  color: darkred">{major.tuition}</b>
+                        {/if}
+                    招生数:{major.plannedNumber}
+                    </p>
+                    </div>
+                {/for}
+
+                </div>
+                </div>
+            {/for}
+        {/if}
+    </div>
+    <div class="info"><p style="color: #0D1C2C">只显示最近的10条数据哦</p></div>
+</div>
+</body>
+</html>
