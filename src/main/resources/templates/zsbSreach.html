@@ -4,7 +4,7 @@
     <title>ZSB User Search Results</title>
     <style>
         .detail1{
-            width: 420px;
+            width: 800px;
         }
         .result {
             border: 1px solid #ccc;
@@ -13,17 +13,19 @@
             margin-bottom: 10px;
             display: flex;
             align-items: center;
-            width: 350px;
+            width: 800px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             margin-left: auto;
             margin-right: auto;
         }
 
         .major {
-            width: 350px;
+            width: 190px;
             height: auto;
+            float: left;
+            margin-right: 10px;
+            margin-top: 5px;
             /*border-radius: 50%;*/
-            margin-right: 35px; /* 向右边移动 20px，你可以根据需要进行调整 */
             border: 2px solid #ccc; /* 添加 2px 的边框，你可以根据需要进行调整 */
             box-sizing: border-box; /* 确保边框宽度包含在盒子宽度内 */
         }
@@ -33,7 +35,16 @@
             margin-left: auto;
             margin-right: auto;
         }
-
+        .footer1 b{
+            flex: 1;
+            font-size: 18px;
+            color: #1259A5;
+            margin-right: auto;
+        }
+        .footer1 {
+            margin-left: auto;
+            margin-right: auto;
+        }
         .info h3 {
             margin: 0;
             font-size: 21px;
@@ -42,10 +53,10 @@
 
         .info p {
             margin: 5px 0;
-            font-size: 14px;
+            font-size: 12px;
             text-align: center;
         }
-        .mahor div{
+        .major div{
             white-space: nowrap;
             font-size: 14px;
         }
@@ -64,23 +75,24 @@
 
                 {#for major in university.universityDtoList}
                     <div class="major">
-                    <p><b style="color: darkblue">{major.undergraduateName}</b></p> <p>  2023分数线:
-                    {#if major.fractionalLine > 0}
-                        <b> {major.fractionalLine}</b>
-                    {/if}
-                    {#if major.fractionalLine <= 0}
-                        <b> 未出/省控线</b>
-                    {/if}
-                </p>
+                    <p><b style="color: darkblue">{major.undergraduateName}</b></p>
+                    <p>  2023分数线:
+                        {#if major.fractionalLine == null}
+                            <b> 未出/省控线</b>
+                        {/if}
+                        {#if  major.fractionalLine != null && major.fractionalLine > 0}
+                            <b> {major.fractionalLine}</b>
+                        {/if}
+                    </p>
                     <p>学费:
                         {#if  major.tuition < 10000 }
-                            <b style=" color: darkgreen">{major.tuition}</b>
+                            <b style=" color: forestgreen">{major.tuition}</b>
                         {/if}
                         {#if  major.tuition >= 10000 }
-                            <b style="  color: darkred">{major.tuition}</b>
+                            <b style="  color: #cc0000">{major.tuition}</b>
                         {/if}
-                    招生数:{major.plannedNumber}
                     </p>
+                    <p> 招生数:{major.plannedNumber} </p>
                     </div>
                 {/for}
 
@@ -89,7 +101,13 @@
             {/for}
         {/if}
     </div>
-    <div class="info"><p style="color: #0D1C2C">只显示最近的10条数据哦</p></div>
+    <div class="info"><p style="color: indianred">只显示完整的前2所大学噢~</p></div>
+    <div class="footer1"><p style="color: #0D1C2C">相关院校:
+    {#for name in names}
+        <b>#  {name} </b>
+    {/for}
+        </p>
+    </div>
 </div>
 </body>
 </html>

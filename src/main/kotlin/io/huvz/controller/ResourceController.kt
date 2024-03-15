@@ -63,11 +63,18 @@ class ResourceController {
         if(httpre.body()==null) return zsbSreach.render()
         val body : String = httpre.body()!!.string()
 
-        val json  = Json(){ignoreUnknownKeys=true}
+            val json  = Json(){ignoreUnknownKeys = true;coerceInputValues = true}
+
 //        try{
             val list: ResponseData = json.decodeFromString<ResponseData>(body)
-            val data:List<University> = list.data.universities;
-            return zsbSreach.data("universityVos", data).render()
+            val data: List<University> = list.data.universities;
+            val limitData= data.take(2);// 限制为前2个元素
+            val names: List<String> = list.data.names;
+            //zsbSreach.data("names", names)
+            val dataMap = mutableMapOf<String, Any>()
+            dataMap["names"] = names
+            dataMap["universityVos"] = limitData
+            return zsbSreach.data(dataMap).render()
 //        }catch (e:Exception)
 //        {
 //            return Response.status(500).entity("<h1>500</h1><br><h1>JSON解析错误，都怪上游</h1>").build()

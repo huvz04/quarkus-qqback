@@ -6,8 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ResponseData(
     val success: Boolean,
-    val messageCode: String,
-    val message: String?,
+    @SerialName("data")
     val data: Data
 )
 
@@ -15,4 +14,6 @@ data class ResponseData(
 data class Data(
     @SerialName("universityVos")
     val universities: List<University>,
+    @SerialName("names")
+    val names:List<String>,
 )
