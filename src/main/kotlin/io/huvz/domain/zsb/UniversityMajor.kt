@@ -15,5 +15,5 @@ data class UniversityMajor(
     //计划招生数
     @SerialName("plannedNumber") var plannedNumber: Long,
     //去年分数线
-    @SerialName("fractional_line") var fractionalLine: Long,
+    @SerialName("fractional_line") var fractionalLine: Long? = 0,
 )

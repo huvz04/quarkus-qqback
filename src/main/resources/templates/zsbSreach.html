@@ -64,7 +64,14 @@
 
                 {#for major in university.universityDtoList}
                     <div class="major">
-                    <p><b style="color: darkblue">{major.undergraduateName}</b></p> <p>  2023分数线:<b>{major.fractionalLine}</b></p>
+                    <p><b style="color: darkblue">{major.undergraduateName}</b></p> <p>  2023分数线:
+                    {#if major.fractionalLine > 0}
+                        <b> {major.fractionalLine}</b>
+                    {/if}
+                    {#if major.fractionalLine <= 0}
+                        <b> 未出/省控线</b>
+                    {/if}
+                </p>
                     <p>学费:
                         {#if  major.tuition < 10000 }
                             <b style=" color: darkgreen">{major.tuition}</b>
